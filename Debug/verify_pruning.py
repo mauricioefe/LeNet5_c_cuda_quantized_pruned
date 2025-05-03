@@ -1,6 +1,6 @@
 import numpy as np
 
-LENET_FILE 	    =	"X:\\Development\\LeNet5_c_cuda_quantized_pruned\\Output\\model_pruned.dat"
+LENET_FILE 	    =	"X:\\Development\\LeNet5_c_cuda_quantized_pruned\\Output\\model.dat"
 LENET_Q_FILE 	=	"X:\\Development\\LeNet5_c_cuda_quantized_pruned\\Output\\model_q_pruned.dat"
 
 for fname in (LENET_FILE, LENET_Q_FILE):

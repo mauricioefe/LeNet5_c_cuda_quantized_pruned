@@ -1,6 +1,3 @@
-### TODO
-- Update this readme to reflect changes
-
 # LeNet5_c_cuda_quantized_pruned
 Codebase for working with [LeNet5](https://github.com/fan-wenjie/LeNet-5) by [fan-wenjie](https://github.com/fan-wenjie). There's a file for training the model on a PC (C), testing the model on a PC (C), testing the model on a Jetson (C), and testing the model on a Jetson using cuda. The objective of this experiment is to show benefits of pruning.
 
@@ -36,9 +33,9 @@ Many of these steps/code have files located where I like to place them in my PC,
 - You can install these extensions within VS Code by searching for 'C++' in the Extensions view `(Ctrl+Shift+X)`.
 
 ## Open this repo in VS Code as a workspace
-- This repo should land in a folder called `LeNet5_c_cuda_quantized`
+- This repo should land in a folder called `LeNet5_c_cuda_quantized_pruned`
 - Open VS Code then click File -> Open workspace from file...
-- Select the workspace file `LeNet5_c_cuda_quantized.code-workspace`
+- Select the workspace file `LeNet5_c_cuda_quantized_pruned.code-workspace`
 - You may have to add folder to workspace which should be the parent directory of the code-workspace file, the workspace structure should look like this:
 
 LeNet5 \
@@ -46,7 +43,7 @@ LeNet5 \
 ├── Library \
 ├── Output \
 ├── Source \
-├── LeNet5_c_cuda_quantized.code-workspace \
+├── LeNet5_c_cuda_quantized_pruned.code-workspace \
 ├── README.md
 
 
@@ -103,41 +100,41 @@ LeNet5 \
 CAUTION In VS Code, sometimes you'll open a C file and the run button is gone. No clue why this happens, but you can fix it by clicking the "split editor right" button (it's next to where the run button should be). No clue why that's a thing.
 
 ### Training the Model
-- Open pc_training_quantized.c in VS Code
+- Open pc_training_q_pruned.c in VS Code
 - Hit play, let it do its thing, maybe update your paths
     - This will output a `model.dat` which contains your trained weights and biases!
 
 ### Test the Model
-- Open pc_jetson_test_quantized.c
+- Open pc_jetson_test_quantized_pruned_pruned.c
 - Hit play, ...
     - This loads the `model.dat` and the dataset and tests the dataset with the trained model.
 
 ## Running Code on the Jetson
 
 ### Single-Thread Test
-This is the same code that runs on the PC, pc_jetson_test_quantized.c
+This is the same code that runs on the PC, pc_jetson_test_quantized_pruned_pruned.c
 
 Create a directory structured like this: \
 This directory does not have to be inside the workspace (recommended).
 
 single-thread  \
-├── pc_jetson_test_quantized.c  \
-├── lenet_quantized.c \
-├── lenet_quantized.h \
+├── pc_jetson_test_quantized_pruned_pruned.c  \
+├── lenet_quantized_pruned_pruned.c \
+├── lenet_quantized_pruned_pruned.h \
 ├── model.dat \
 ├── t10k-images-idx3-ubyte \
 ├── t10k-labels-idx1-ubyte
 
 - Just **copy** the files that you need from this repo to your single-thread folder.
 - You can find...
-    - `pc_jetson_test_quantized.c` in LeNet5_c_cuda_quantized/Source
-    - `t10k-images-idx3-ubyte` and `t10k-labels-idx1-ubyte` in LeNet5_c_cuda_quantized/Library/LeNet5/LeNet-5
-    - `lenet_quantized.c`, `lenet_quantized.h` in LeNet5_c_cuda_quantized/Source/include
-    - `model.dat` in LeNet5_c_cuda_quantized/Output
+    - `pc_jetson_test_q_pruned.c` in LeNet5_c_cuda_quantized_pruned_pruned/Source
+    - `t10k-images-idx3-ubyte` and `t10k-labels-idx1-ubyte` in LeNet5_c_cuda_quantized_pruned/Library/LeNet5/LeNet-5
+    - `lenet_q_pruned.c`, `lenet_quantized_pruned.h` in LeNet5_c_cuda_quantized_pruned/Source/include
+    - `model.dat` in LeNet5_c_cuda_quantized_pruned/Output
 - Open a terminal.
 - Use `ls`/`cd` to navigate to your `single-thread` directory.
     - i.e. `> cd path/to/where/you/placed/single-thread`
-- Run `gcc -o lenet5Qsinglethread pc_jetson_test_quantized.c lenet_quantized.c -lm` to generate the .exe file.
+- Run `gcc -o lenet5Qsinglethread pc_jetson_test_q_pruned.c lenet_q_pruned.c -lm` to generate the .exe file.
     - You will see `lenet5Qsinglethread` appear in the folder.
 - Run `./lenet5Qsinglethread` and wait...
     - This loads the `model.dat` and the dataset and tests the dataset with the trained model.
@@ -149,16 +146,16 @@ Create a directory structured like this: \
 This directory does not have to be inside the workspace (recommended).
 
 multi-thread  \
-├── jetson_test_quantized.cu  \
+├── jetson_test_q_pruned.cu  \
 ├── model.dat \
 ├── t10k-images-idx3-ubyte \
 ├── t10k-labels-idx1-ubyte
 
 - Just **copy** the files that you need from this repo to your single-thread folder.
 - You can find...
-    - `jetson_test_quantized.cu` in LeNet5_c_cuda_quantized/Source
-    - `model.dat` in LeNet5_c_cuda_quantized/Output
-    - `t10k-images-idx3-ubyte` and `t10k-labels-idx1-ubyte` in LeNet5_c_cuda_quantized/Library/LeNet5/LeNet-5
+    - `jetson_test_q_pruned.cu` in LeNet5_c_cuda_quantized_pruned/Source
+    - `model.dat` in LeNet5_c_cuda_quantized_pruned/Output
+    - `t10k-images-idx3-ubyte` and `t10k-labels-idx1-ubyte` in LeNet5_c_cuda_quantized_pruned/Library/LeNet5/LeNet-5
 - Open a terminal.
 - Use `ls`/`cd` to navigate to your `multi-thread` directory.
     - i.e. `> cd path/to/where/you/placed/multi-thread`
@@ -172,7 +169,17 @@ multi-thread  \
 
 ### Results
 
-The main benefit of quantization is the model.dat file was reduced from around 400 KB to 51 KB while retaining comparable performance to the original model.
+The main benefit of pruning is the model complexity is decreased by removing "meaningless" weights and replacing them with zeroes. We used a python script, located in /Debug to check how many zeroes were present compared to the regular model. We selected a pruning rate of 0.20 during training
+
+![alt text](Debug/debug.png "")
+
+#### Pruned Model
+| Model | Accuracy | Time |
+|:-------------:|:-------------:|:-------------:|
+| PC Training | 9454/10000 | 10m 48s |
+| PC Test | ... | 17s |
+| Jetson Single-thread | ... | 2m 30s |
+| Jetson Multi-thread | ... | 0.15s |
 
 #### Quantized Model
 | Model | Accuracy | Time |

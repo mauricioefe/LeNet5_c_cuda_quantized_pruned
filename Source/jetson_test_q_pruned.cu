@@ -6,9 +6,9 @@
 #include <cuda_runtime.h>
 
 // ——— External files ————————————————————————————————————————————————
-#define FILE_TEST_IMAGE   "X:\\Development\\LeNet5_c_cuda_quantized_pruned\\Library\\LeNet5\\LeNet-5\\t10k-images-idx3-ubyte"
-#define FILE_TEST_LABEL   "X:\\Development\\LeNet5_c_cuda_quantized_pruned\\Library\\LeNet5\\LeNet-5\\t10k-labels-idx1-ubyte"
-#define LENET_Q_FILE      "X:\\Development\\LeNet5_c_cuda_quantized_pruned\\Output\\model_quantized.dat"
+#define FILE_TEST_IMAGE   "t10k-images-idx3-ubyte"
+#define FILE_TEST_LABEL   "t10k-labels-idx1-ubyte"
+#define LENET_Q_FILE      "model_q_pruned.dat"
 
 // ——— Constants & Shapes —————————————————————————————————————————————
 #define COUNT_TEST        10000
